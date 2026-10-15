@@ -2,1482 +2,1522 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#080a10">
-  <meta name="description" content="Nirx's little corner of the internet. Embeds, bots, websites, and random ideas.">
-  <title>Nirx — come look around</title>
-
-  <style>
-    :root {
-      --bg: #080a10;
-      --panel: rgba(17, 21, 33, .78);
-      --text: #edf7ff;
-      --muted: #8a95a9;
-      --cyan: #22d3ee;
-      --purple: #a78bfa;
-      --border: rgba(150, 175, 220, .14);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-      scroll-padding-top: 100px;
-    }
-
-    body {
-      min-height: 100vh;
-      overflow-x: hidden;
-      background: var(--bg);
-      color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system,
-        BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.6;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button {
-      font: inherit;
-    }
-
-    button, a {
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    ::selection {
-      background: rgba(34, 211, 238, .28);
-      color: white;
-    }
-
-    /* BACKGROUND */
-
-    .background {
-      position: fixed;
-      inset: 0;
-      z-index: -2;
-      overflow: hidden;
-      pointer-events: none;
-      background:
-        radial-gradient(ellipse at 18% 15%, rgba(34,211,238,.08), transparent 36%),
-        radial-gradient(ellipse at 84% 42%, rgba(167,139,250,.09), transparent 35%),
-        var(--bg);
-    }
-
-    .grid {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(120,160,210,.055) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(120,160,210,.055) 1px, transparent 1px);
-      background-size: 48px 48px;
-      mask-image: linear-gradient(to bottom, black, transparent 90%);
-    }
-
-    #ambient-particles {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    .orb {
-      position: absolute;
-      width: 330px;
-      height: 330px;
-      top: 24%;
-      left: 60%;
-      border-radius: 50%;
-      background: rgba(34,211,238,.07);
-      filter: blur(85px);
-      animation: orb-float 10s ease-in-out infinite alternate;
-    }
-
-    .orb.two {
-      width: 250px;
-      height: 250px;
-      top: 65%;
-      left: 10%;
-      background: rgba(167,139,250,.08);
-      animation-delay: -4s;
-    }
-
-    @keyframes orb-float {
-      from { transform: translate(-20px, -20px) scale(.9); }
-      to { transform: translate(40px, 30px) scale(1.15); }
-    }
-
-    /* PAGE LAYOUT */
-
-    .page {
-      width: min(1080px, calc(100% - 44px));
-      margin-inline: auto;
-    }
-
-    .topbar {
-      position: sticky;
-      top: 14px;
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-      margin-top: 14px;
-      padding: 12px 16px;
-      border: 1px solid var(--border);
-      border-radius: 17px;
-      background: rgba(8,10,16,.76);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 17px;
-      font-weight: 850;
-      letter-spacing: -.7px;
-    }
-
-    .brand-mark {
-      display: grid;
-      place-items: center;
-      width: 35px;
-      height: 35px;
-      border: 1px solid rgba(34,211,238,.4);
-      border-radius: 11px;
-      color: var(--cyan);
-      background: rgba(34,211,238,.08);
-      box-shadow: 0 0 24px rgba(34,211,238,.08);
-    }
-
-    .brand span {
-      color: var(--cyan);
-    }
-
-    .nav {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-
-    .nav a {
-      padding: 8px 12px;
-      color: var(--muted);
-      font-size: 12px;
-      transition: color .2s, background .2s;
-      border-radius: 9px;
-    }
-
-    .nav a:hover {
-      color: white;
-      background: rgba(255,255,255,.055);
-    }
-
-    .status {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      color: #9ca8bb;
-      font-size: 10px;
-      letter-spacing: 1px;
-      white-space: nowrap;
-    }
-
-    .status-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #4ade80;
-      box-shadow: 0 0 12px rgba(74,222,128,.8);
-      animation: pulse-dot 2s infinite;
-    }
-
-    @keyframes pulse-dot {
-      50% { opacity: .45; box-shadow: 0 0 3px #4ade80; }
-    }
-
-    /* HERO */
-
-    .hero {
-      position: relative;
-      display: flex;
-      align-items: center;
-      min-height: 565px;
-      padding: 95px 0 85px;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      max-width: 730px;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 9px;
-      padding: 7px 11px;
-      border: 1px solid rgba(34,211,238,.23);
-      border-radius: 999px;
-      color: #9eeefa;
-      background: rgba(34,211,238,.055);
-      font-size: 10px;
-      letter-spacing: 1.7px;
-      text-transform: uppercase;
-    }
-
-    .hero h1 {
-      margin: 27px 0 20px;
-      font-size: clamp(58px, 10vw, 112px);
-      line-height: .96;
-      letter-spacing: -.085em;
-      font-weight: 900;
-    }
-
-    .hero h1 .gradient {
-      color: transparent;
-      background: linear-gradient(110deg, #f4fbff 5%, var(--cyan) 48%, var(--purple) 100%);
-      background-clip: text;
-      -webkit-background-clip: text;
-    }
-
-    .hero p {
-      max-width: 510px;
-      color: #9ba8bb;
-      font-size: 15px;
-      line-height: 1.9;
-    }
-
-    .hero p strong {
-      color: #edf7ff;
-      font-weight: 650;
-    }
-
-    .hero-actions {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 29px;
-    }
-
-    .button {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      gap: 9px;
-      min-height: 45px;
-      padding: 0 17px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: rgba(255,255,255,.035);
-      color: var(--text);
-      font-size: 12px;
-      font-weight: 700;
-      transition: transform .2s, border-color .2s, background .2s;
-      cursor: pointer;
-    }
-
-    .button:hover {
-      transform: translateY(-3px);
-      border-color: rgba(34,211,238,.5);
-      background: rgba(34,211,238,.08);
-    }
-
-    .button.primary {
-      border-color: transparent;
-      background: linear-gradient(110deg, #22d3ee, #9b8afb);
-      color: #071018;
-      box-shadow: 0 7px 28px rgba(34,211,238,.13);
-    }
-
-    .button.primary:hover {
-      box-shadow: 0 10px 35px rgba(34,211,238,.25);
-    }
-
-    .hero-side {
-      position: absolute;
-      right: 4%;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 230px;
-      height: 230px;
-      display: grid;
-      place-items: center;
-      pointer-events: none;
-    }
-
-    .hero-orbit {
-      position: absolute;
-      inset: 0;
-      border: 1px solid rgba(34,211,238,.2);
-      border-radius: 50%;
-      animation: orbit-spin 18s linear infinite;
-    }
-
-    .hero-orbit::before,
-    .hero-orbit::after {
-      content: "";
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--cyan);
-      box-shadow: 0 0 18px var(--cyan);
-    }
-
-    .hero-orbit::before { top: 18%; left: 12%; }
-    .hero-orbit::after { right: 3%; bottom: 35%; background: var(--purple); }
-
-    .hero-orbit.inner {
-      inset: 25px;
-      border-color: rgba(167,139,250,.24);
-      animation-direction: reverse;
-      animation-duration: 13s;
-    }
-
-    .hero-symbol {
-      display: grid;
-      place-items: center;
-      width: 100px;
-      height: 100px;
-      border: 1px solid rgba(34,211,238,.32);
-      border-radius: 29px;
-      color: var(--cyan);
-      background: rgba(34,211,238,.055);
-      font-size: 36px;
-      font-weight: 900;
-      box-shadow: 0 0 65px rgba(34,211,238,.1), inset 0 0 35px rgba(34,211,238,.05);
-      animation: symbol-float 4s ease-in-out infinite alternate;
-    }
-
-    @keyframes orbit-spin {
-      to { transform: rotate(360deg); }
-    }
-
-    @keyframes symbol-float {
-      to { transform: translateY(-9px) rotate(3deg); }
-    }
-
-    /* SECTION HEADERS */
-
-    section.content-section {
-      padding: 45px 0 65px;
-    }
-
-    .section-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: end;
-      gap: 20px;
-      margin-bottom: 25px;
-    }
-
-    .section-label {
-      color: var(--cyan);
-      font-size: 10px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-
-    .section-head h2 {
-      margin-top: 7px;
-      font-size: clamp(26px, 4vw, 38px);
-      line-height: 1.2;
-      letter-spacing: -1.5px;
-    }
-
-    .section-head > p {
-      max-width: 290px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    /* PROJECT CARDS */
-
-    .project-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 15px;
-    }
-
-    .project-card {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      min-height: 235px;
-      overflow: hidden;
-      padding: 23px;
-      border: 1px solid var(--border);
-      border-radius: 19px;
-      background: linear-gradient(145deg, rgba(19,25,40,.86), rgba(11,14,23,.92));
-      transition: transform .25s, border-color .25s, box-shadow .25s;
-      isolation: isolate;
-    }
-
-    .project-card::before {
-      content: "";
-      position: absolute;
-      z-index: -1;
-      width: 170px;
-      height: 170px;
-      right: -85px;
-      top: -95px;
-      border-radius: 50%;
-      background: var(--card-glow, var(--cyan));
-      opacity: .09;
-      filter: blur(38px);
-      transition: opacity .25s, transform .35s;
-    }
-
-    .project-card:hover {
-      transform: translateY(-6px);
-      border-color: rgba(34,211,238,.36);
-      box-shadow: 0 15px 55px rgba(0,0,0,.22);
-    }
-
-    .project-card:hover::before {
-      opacity: .25;
-      transform: scale(1.5);
-    }
-
-    .project-icon {
-      display: grid;
-      place-items: center;
-      width: 46px;
-      height: 46px;
-      border: 1px solid rgba(34,211,238,.22);
-      border-radius: 14px;
-      color: var(--cyan);
-      background: rgba(34,211,238,.07);
-      font-size: 21px;
-    }
-
-    .project-card h3 {
-      margin-top: 23px;
-      font-size: 17px;
-      letter-spacing: -.4px;
-    }
-
-    .project-card p {
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.8;
-    }
-
-    .project-action {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-top: auto;
-      padding-top: 20px;
-      color: #aab6c9;
-      font-size: 11px;
-    }
-
-    .project-action span:last-child {
-      color: var(--cyan);
-      font-size: 18px;
-      transition: transform .2s;
-    }
-
-    .project-card:hover .project-action span:last-child {
-      transform: translate(3px, -3px);
-    }
-
-    /* ABOUT */
-
-    .about-panel {
-      position: relative;
-      display: grid;
-      grid-template-columns: 1fr 240px;
-      gap: 40px;
-      overflow: hidden;
-      padding: 32px;
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      background: linear-gradient(120deg, rgba(18,23,36,.88), rgba(12,14,24,.8));
-    }
-
-    .about-panel::after {
-      content: "";
-      position: absolute;
-      right: -100px;
-      bottom: -180px;
-      width: 300px;
-      height: 300px;
-      border-radius: 50%;
-      background: rgba(167,139,250,.09);
-      filter: blur(65px);
-      pointer-events: none;
-    }
-
-    .about-copy h3 {
-      margin: 9px 0 13px;
-      font-size: 27px;
-      letter-spacing: -1px;
-    }
-
-    .about-copy p {
-      max-width: 610px;
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.95;
-    }
-
-    .about-copy p strong {
-      color: #e6f6ff;
-    }
-
-    .about-stats {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .mini-stat {
-      padding: 14px;
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      background: rgba(255,255,255,.025);
-    }
-
-    .mini-stat strong {
-      display: block;
-      color: var(--cyan);
-      font-size: 13px;
-    }
-
-    .mini-stat span {
-      color: var(--muted);
-      font-size: 10px;
-    }
-
-    /* FOOTER */
-
-    footer {
-      display: flex;
-      justify-content: space-between;
-      gap: 15px;
-      margin-top: 25px;
-      padding: 24px 0 30px;
-      border-top: 1px solid var(--border);
-      color: #758196;
-      font-size: 11px;
-    }
-
-    footer span:last-child {
-      text-align: right;
-    }
-
-    /* SCROLL REVEAL */
-
-    .reveal {
-      opacity: 0;
-      transform: translateY(22px);
-      transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1);
-    }
-
-    .reveal.shown {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* TOAST */
-
-    .toast {
-      position: fixed;
-      z-index: 100010;
-      left: 50%;
-      bottom: 25px;
-      width: max-content;
-      max-width: calc(100% - 32px);
-      padding: 13px 18px;
-      border: 1px solid rgba(34,211,238,.3);
-      border-radius: 13px;
-      background: rgba(12,17,27,.95);
-      color: #eafaff;
-      font-size: 12px;
-      box-shadow: 0 10px 45px rgba(0,0,0,.35), 0 0 25px rgba(34,211,238,.08);
-      backdrop-filter: blur(15px);
-      animation: toast-in .25s ease-out;
-    }
-
-    @keyframes toast-in {
-      from { opacity: 0; transform: translate(-50%, 10px); }
-      to { opacity: 1; transform: translate(-50%, 0); }
-    }
-
-    /* MODAL */
-
-    .modal-backdrop {
-      position: fixed;
-      z-index: 100020;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      padding: 20px;
-      background: rgba(3,5,10,.76);
-      backdrop-filter: blur(12px);
-    }
-
-    .modal-backdrop[hidden] {
-      display: none;
-    }
-
-    .modal {
-      width: min(430px, 100%);
-      padding: 26px;
-      border: 1px solid rgba(34,211,238,.25);
-      border-radius: 20px;
-      background: #0d111c;
-      box-shadow: 0 20px 90px rgba(0,0,0,.55);
-      animation: modal-in .2s ease-out;
-    }
-
-    @keyframes modal-in {
-      from { opacity: 0; transform: scale(.97) translateY(8px); }
-      to { opacity: 1; transform: scale(1) translateY(0); }
-    }
-
-    .modal h3 {
-      margin: 10px 0;
-      font-size: 23px;
-    }
-
-    .modal p {
-      margin-bottom: 22px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.8;
-    }
-
-    .modal-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 9px;
-    }
-
-    /* CUSTOM CURSOR: DESKTOP AND LAPTOP */
-
-    #nirx-cursor {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 99999;
-      width: 0;
-      height: 0;
-      opacity: 0;
-      pointer-events: none;
-      will-change: transform;
-      transition: opacity .2s;
-    }
-
-    #nirx-cursor.visible {
-      opacity: 1;
-    }
-
-    .cursor-core {
-      position: absolute;
-      top: -2.5px;
-      left: -2.5px;
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: #fff;
-      box-shadow: 0 0 8px var(--cyan), 0 0 20px var(--cyan), 0 0 34px rgba(34,211,238,.65);
-    }
-
-    .cursor-ring {
-      position: absolute;
-      top: -15px;
-      left: -15px;
-      width: 30px;
-      height: 30px;
-      border: 1px solid rgba(34,211,238,.9);
-      border-radius: 50%;
-      box-shadow: 0 0 13px rgba(34,211,238,.18), inset 0 0 10px rgba(34,211,238,.09);
-      transition: width .18s ease, height .18s ease, top .18s ease,
-        left .18s ease, border-color .18s ease, background .18s ease;
-    }
-
-    #nirx-cursor.hovering .cursor-ring {
-      top: -22px;
-      left: -22px;
-      width: 44px;
-      height: 44px;
-      border-color: var(--purple);
-      background: rgba(167,139,250,.08);
-      box-shadow: 0 0 20px rgba(167,139,250,.2);
-    }
-
-    .nirx-trail-particle {
-      position: fixed;
-      z-index: 99998;
-      width: var(--size, 4px);
-      height: var(--size, 4px);
-      border-radius: 50%;
-      background: var(--particle-color, var(--cyan));
-      box-shadow: 0 0 10px var(--particle-color, var(--cyan));
-      pointer-events: none;
-      will-change: transform, opacity;
-      animation: trail-fade 550ms ease-out forwards;
-    }
-
-    @keyframes trail-fade {
-      from { opacity: .95; transform: translate(-50%,-50%) scale(1); }
-      to { opacity: 0; transform: translate(calc(-50% + var(--drift-x)), calc(-50% + var(--drift-y))) scale(.1); }
-    }
-
-    /* MOBILE TAP RIPPLE */
-
-    #nirx-tap-layer {
-      position: fixed;
-      inset: 0;
-      z-index: 99998;
-      pointer-events: none;
-      overflow: hidden;
-    }
-
-    .nirx-tap-ripple {
-      position: fixed;
-      width: 22px;
-      height: 22px;
-      border: 1px solid var(--cyan);
-      border-radius: 50%;
-      box-shadow: 0 0 15px rgba(34,211,238,.45);
-      transform: translate(-50%,-50%) scale(.3);
-      animation: tap-expand 450ms ease-out forwards;
-    }
-
-    @keyframes tap-expand {
-      to { opacity: 0; transform: translate(-50%,-50%) scale(2.7); }
-    }
-
-    @media (hover: hover) and (pointer: fine) {
-      body,
-      a,
-      button {
-        cursor: none !important;
-      }
-    }
-
-    /* RESPONSIVE */
-
-    @media (max-width: 800px) {
-      .hero-side {
-        right: 0;
-        width: 160px;
-        height: 160px;
-        opacity: .65;
-      }
-
-      .hero-symbol {
-        width: 72px;
-        height: 72px;
-        border-radius: 22px;
-        font-size: 28px;
-      }
-
-      .project-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .about-panel {
-        grid-template-columns: 1fr;
-        gap: 24px;
-      }
-
-      .about-stats {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0,1fr));
-      }
-    }
-
-    @media (max-width: 560px) {
-      .page {
-        width: calc(100% - 28px);
-      }
-
-      .topbar {
-        top: 7px;
-        margin-top: 7px;
-        padding: 9px 11px;
-        gap: 8px;
-      }
-
-      .brand {
-        font-size: 15px;
-      }
-
-      .brand-mark {
-        width: 31px;
-        height: 31px;
-      }
-
-      .nav {
-        gap: 0;
-      }
-
-      .nav a {
-        padding: 8px 7px;
-        font-size: 10px;
-      }
-
-      .status {
-        display: none;
-      }
-
-      .hero {
-        min-height: 490px;
-        padding: 85px 0 65px;
-      }
-
-      .hero h1 {
-        font-size: clamp(52px, 13vw, 72px);
-      }
-
-      .hero p {
-        max-width: 95%;
-        font-size: 13px;
-      }
-
-      .hero-side {
-        top: 35px;
-        right: -5px;
-        width: 110px;
-        height: 110px;
-        transform: none;
-        opacity: .38;
-      }
-
-      .hero-orbit.inner {
-        inset: 13px;
-      }
-
-      .hero-symbol {
-        width: 48px;
-        height: 48px;
-        border-radius: 15px;
-        font-size: 20px;
-      }
-
-      .hero-actions {
-        gap: 8px;
-      }
-
-      .button {
-        min-height: 42px;
-        padding: 0 12px;
-        font-size: 11px;
-      }
-
-      section.content-section {
-        padding: 35px 0 45px;
-      }
-
-      .section-head {
-        align-items: start;
-        flex-direction: column;
-        gap: 8px;
-      }
-
-      .section-head > p {
-        max-width: 100%;
-      }
-
-      .project-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .project-card {
-        min-height: 205px;
-      }
-
-      .about-panel {
-        padding: 22px;
-      }
-
-      .about-copy h3 {
-        font-size: 24px;
-      }
-
-      .about-stats {
-        grid-template-columns: 1fr;
-      }
-
-      footer {
-        flex-direction: column;
-        gap: 7px;
-      }
-
-      footer span:last-child {
-        text-align: left;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-
-      *,
-      *::before,
-      *::after {
-        animation-duration: .01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: .01ms !important;
-      }
-
-      .reveal {
-        opacity: 1;
-        transform: none;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080910">
+<title>Nirx — come look around</title>
+
+<style>
+:root {
+  --bg: #080910;
+  --panel: #10121d;
+  --text: #f2f3ff;
+  --muted: #9699b4;
+  --cyan: #67f7ff;
+  --purple: #a78bfa;
+  --line: rgba(255,255,255,.09);
+  --glow: rgba(103,247,255,.16);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(to bottom, black, transparent 90%);
+}
+
+button, a {
+  font: inherit;
+}
+
+button, a, .work-card {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  color: inherit;
+}
+
+button:focus-visible, a:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 5px;
+}
+
+::selection {
+  color: #080910;
+  background: var(--cyan);
+}
+
+#background {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.orb {
+  position: fixed;
+  z-index: -1;
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: .14;
+  pointer-events: none;
+  animation: float 12s ease-in-out infinite alternate;
+}
+
+.orb-one {
+  top: 4%;
+  left: -170px;
+  background: var(--cyan);
+}
+
+.orb-two {
+  top: 48%;
+  right: -200px;
+  background: var(--purple);
+  animation-delay: -5s;
+}
+
+@keyframes float {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(50px, 65px, 0); }
+}
+
+/* Neon cursor */
+
+#cursor-dot, #cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  pointer-events: none;
+  opacity: 0;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#cursor-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--cyan);
+  box-shadow: 0 0 12px var(--cyan), 0 0 25px var(--cyan);
+}
+
+#cursor-ring {
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(103,247,255,.85);
+  box-shadow: 0 0 15px rgba(103,247,255,.12),
+    inset 0 0 10px rgba(103,247,255,.08);
+  transition: width .2s ease, height .2s ease,
+    border-color .2s ease, background .2s ease;
+}
+
+#cursor-ring.hovering {
+  width: 54px;
+  height: 54px;
+  border-color: var(--purple);
+  background: rgba(167,139,250,.08);
+}
+
+.trail-particle {
+  position: fixed;
+  z-index: 9998;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: var(--cyan);
+  box-shadow: 0 0 10px var(--cyan);
+  animation: trail-fade .65s ease-out forwards;
+}
+
+@keyframes trail-fade {
+  from { opacity: .9; transform: scale(1); }
+  to { opacity: 0; transform: scale(.1) translateY(-12px); }
+}
+
+.tap-ripple {
+  position: fixed;
+  z-index: 9999;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--cyan);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: ripple .65s ease-out forwards;
+}
+
+@keyframes ripple {
+  to { opacity: 0; width: 80px; height: 80px; }
+}
+
+/* Navigation */
+
+.nav-wrap {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 14px 6%;
+  background: rgba(8,9,16,.76);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--line);
+}
+
+nav {
+  max-width: 1180px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.brand {
+  font-size: 1.35rem;
+  font-weight: 900;
+  letter-spacing: -1px;
+  cursor: none;
+}
+
+.brand span {
+  color: var(--cyan);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 23px;
+}
+
+.nav-right a {
+  color: var(--muted);
+  font-size: .85rem;
+  transition: color .2s;
+}
+
+.nav-right a:hover {
+  color: var(--cyan);
+}
+
+.clock {
+  color: var(--cyan);
+  font-size: .76rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.nav-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.icon-btn {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.035);
+  border-radius: 11px;
+  color: var(--muted);
+  cursor: none;
+  transition: .2s;
+}
+
+.icon-btn:hover {
+  color: var(--cyan);
+  border-color: rgba(103,247,255,.4);
+  transform: translateY(-2px);
+}
+
+.sound-btn.active {
+  color: var(--cyan);
+  border-color: rgba(103,247,255,.45);
+}
+
+/* Main layout */
+
+main {
+  max-width: 1180px;
+  margin: auto;
+  padding: 0 6%;
+}
+
+.hero {
+  min-height: 660px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 100px 0 115px;
+  position: relative;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  color: var(--muted);
+  font-size: .8rem;
+  margin-bottom: 27px;
+  padding: 9px 13px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.025);
+  border-radius: 999px;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  background: #6df7b2;
+  border-radius: 50%;
+  box-shadow: 0 0 12px #6df7b2;
+  animation: pulse 1.8s infinite;
+}
+
+@keyframes pulse {
+  50% { opacity: .35; box-shadow: 0 0 2px #6df7b2; }
+}
+
+.hero h1 {
+  font-size: clamp(3.5rem, 10vw, 8.4rem);
+  font-weight: 950;
+  line-height: .92;
+  letter-spacing: -.085em;
+  max-width: 1000px;
+}
+
+.gradient-text {
+  color: transparent;
+  background: linear-gradient(100deg, var(--cyan), #b6a1ff 75%);
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+.hero-description {
+  color: var(--muted);
+  max-width: 540px;
+  font-size: clamp(1rem, 2vw, 1.12rem);
+  line-height: 1.9;
+  margin-top: 28px;
+}
+
+.hero-description strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 0 19px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255,255,255,.035);
+  font-size: .88rem;
+  font-weight: 650;
+  cursor: none;
+  transition: transform .2s, border-color .2s, background .2s;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  border-color: rgba(103,247,255,.45);
+}
+
+.btn-primary {
+  color: #071014;
+  border-color: transparent;
+  background: var(--cyan);
+}
+
+.btn-primary:hover {
+  background: #b4fbff;
+  box-shadow: 0 0 28px rgba(103,247,255,.18);
+}
+
+.hero-hint {
+  position: absolute;
+  right: 0;
+  bottom: 44px;
+  color: #676a85;
+  font-size: .76rem;
+}
+
+/* Section headings */
+
+section {
+  padding: 90px 0;
+}
+
+.section-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 20px;
+  margin-bottom: 35px;
+}
+
+.eyebrow {
+  color: var(--cyan);
+  font-size: .76rem;
+  text-transform: uppercase;
+  letter-spacing: .15em;
+  font-weight: 750;
+  margin-bottom: 12px;
+}
+
+.section-top h2, .about h2 {
+  font-size: clamp(2rem, 5vw, 3.3rem);
+  letter-spacing: -.055em;
+  line-height: 1.1;
+}
+
+.section-note {
+  color: var(--muted);
+  font-size: .85rem;
+}
+
+/* Work cards */
+
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 17px;
+}
+
+.work-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 270px;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: linear-gradient(145deg, rgba(255,255,255,.045),
+    rgba(255,255,255,.012));
+  cursor: none;
+  transition: transform .25s, border-color .25s, background .25s;
+}
+
+.work-card::before {
+  content: "";
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  top: -100px;
+  right: -90px;
+  background: var(--cyan);
+  filter: blur(85px);
+  opacity: 0;
+  transition: opacity .3s;
+  pointer-events: none;
+}
+
+.work-card:hover {
+  transform: translateY(-7px);
+  border-color: rgba(103,247,255,.32);
+  background: linear-gradient(145deg, rgba(103,247,255,.065),
+    rgba(255,255,255,.015));
+}
+
+.work-card:hover::before {
+  opacity: .22;
+}
+
+.card-icon {
+  width: 47px;
+  height: 47px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  color: var(--cyan);
+  background: rgba(103,247,255,.08);
+  border: 1px solid rgba(103,247,255,.12);
+  font-size: 1.25rem;
+  margin-bottom: 30px;
+}
+
+.work-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  letter-spacing: -.025em;
+}
+
+.work-card p {
+  color: var(--muted);
+  font-size: .88rem;
+  line-height: 1.75;
+}
+
+.card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: auto;
+  padding-top: 24px;
+  color: #8589a5;
+  font-size: .78rem;
+}
+
+.card-arrow {
+  color: var(--cyan);
+  font-size: 1.2rem;
+  transition: transform .2s;
+}
+
+.work-card:hover .card-arrow {
+  transform: translate(4px, -3px);
+}
+
+/* About */
+
+.about-layout {
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.about h2 {
+  max-width: 600px;
+  margin-bottom: 25px;
+}
+
+.about-copy {
+  max-width: 600px;
+  color: var(--muted);
+  line-height: 1.95;
+  font-size: .98rem;
+}
+
+.about-copy p + p {
+  margin-top: 15px;
+}
+
+.about-copy strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.about-panel {
+  padding: 27px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: rgba(255,255,255,.025);
+}
+
+.panel-label {
+  color: var(--muted);
+  font-size: .76rem;
+  margin-bottom: 22px;
+}
+
+.skill-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: .9rem;
+}
+
+.skill-row:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.skill-row span:last-child {
+  color: var(--cyan);
+  font-size: .78rem;
+}
+
+/* Little closing section */
+
+.closing {
+  text-align: center;
+  padding: 95px 0 110px;
+}
+
+.closing h2 {
+  font-size: clamp(2.2rem, 7vw, 5rem);
+  letter-spacing: -.075em;
+  margin-bottom: 15px;
+}
+
+.closing p {
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.closing .btn {
+  margin-top: 25px;
+}
+
+footer {
+  padding: 24px 6%;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  color: #737690;
+  font-size: .78rem;
+}
+
+footer span:last-child {
+  text-align: right;
+}
+
+/* Toast */
+
+#toast {
+  position: fixed;
+  z-index: 12000;
+  bottom: 25px;
+  left: 50%;
+  max-width: calc(100vw - 30px);
+  padding: 13px 18px;
+  border: 1px solid rgba(103,247,255,.3);
+  border-radius: 13px;
+  background: rgba(16,18,29,.96);
+  color: var(--text);
+  font-size: .88rem;
+  box-shadow: 0 10px 40px rgba(0,0,0,.35);
+  opacity: 0;
+  transform: translate(-50%, 15px);
+  pointer-events: none;
+  transition: opacity .2s, transform .2s;
+}
+
+#toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* Modal */
+
+.modal-backdrop {
+  position: fixed;
+  z-index: 11000;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0,0,0,.72);
+  backdrop-filter: blur(10px);
+}
+
+.modal-backdrop.open {
+  display: flex;
+  animation: fade-in .18s ease;
+}
+
+.modal {
+  width: 100%;
+  max-width: 420px;
+  padding: 28px;
+  border: 1px solid rgba(103,247,255,.25);
+  border-radius: 22px;
+  background: #10121d;
+  box-shadow: 0 0 70px rgba(103,247,255,.08);
+  animation: modal-in .25s ease;
+}
+
+.modal h3 {
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+}
+
+.modal p {
+  color: var(--muted);
+  font-size: .9rem;
+  line-height: 1.8;
+}
+
+.modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal-in {
+  from { opacity: 0; transform: translateY(10px) scale(.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Command palette */
+
+.palette-backdrop {
+  position: fixed;
+  z-index: 13000;
+  inset: 0;
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: min(17vh, 130px) 18px 20px;
+  background: rgba(0,0,0,.7);
+  backdrop-filter: blur(9px);
+}
+
+.palette-backdrop.open {
+  display: flex;
+}
+
+.palette {
+  width: 100%;
+  max-width: 520px;
+  overflow: hidden;
+  border: 1px solid rgba(103,247,255,.25);
+  border-radius: 18px;
+  background: #10121d;
+  box-shadow: 0 25px 100px rgba(0,0,0,.55);
+  animation: modal-in .18s ease;
+}
+
+.palette-search {
+  width: 100%;
+  padding: 19px 20px;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  outline: none;
+  font-size: 1rem;
+}
+
+.palette-search::placeholder {
+  color: #777b96;
+}
+
+.palette-list {
+  padding: 8px;
+}
+
+.palette-item {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 13px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+  cursor: none;
+}
+
+.palette-item:hover, .palette-item:focus-visible {
+  background: rgba(103,247,255,.08);
+  outline: none;
+}
+
+.palette-item small {
+  color: var(--muted);
+  font-size: .75rem;
+}
+
+.palette-hint {
+  padding: 12px 18px;
+  color: #777b96;
+  border-top: 1px solid var(--line);
+  font-size: .74rem;
+}
+
+/* Secret effect */
+
+body.secret-mode {
+  animation: secret-flash .65s ease;
+}
+
+@keyframes secret-flash {
+  0%, 100% { filter: none; }
+  35% { filter: hue-rotate(80deg); }
+  70% { filter: hue-rotate(-60deg); }
+}
+
+/* Scroll reveal */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 850px) {
+  .work-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .work-card:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .about-layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .hero {
+    min-height: 610px;
+  }
+}
+
+@media (max-width: 560px) {
+  body {
+    cursor: auto;
+  }
+
+  #cursor-dot, #cursor-ring {
+    display: none !important;
+  }
+
+  .nav-wrap {
+    padding: 12px 5%;
+  }
+
+  .nav-right {
+    gap: 13px;
+  }
+
+  .nav-right a {
+    font-size: .78rem;
+  }
+
+  .clock {
+    display: none;
+  }
+
+  main {
+    padding: 0 5%;
+  }
+
+  .hero {
+    min-height: 570px;
+    padding: 80px 0 100px;
+  }
+
+  .hero h1 {
+    font-size: clamp(3.3rem, 15vw, 5.5rem);
+  }
+
+  .hero-hint {
+    right: auto;
+    left: 0;
+  }
+
+  section {
+    padding: 65px 0;
+  }
+
+  .section-top {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .work-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .work-card, .work-card:last-child {
+    grid-column: auto;
+    min-height: 245px;
+  }
+
+  footer {
+    padding: 22px 5%;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  footer span:last-child {
+    text-align: left;
+  }
+
+  .nav-actions {
+    gap: 5px;
+  }
+
+  .icon-btn {
+    width: 33px;
+    height: 33px;
+  }
+}
+
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  #cursor-dot, #cursor-ring {
+    display: none !important;
+  }
+
+  body {
+    cursor: auto;
+  }
+
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+</style>
 </head>
 
 <body>
-  <div class="background" aria-hidden="true">
-    <div class="grid"></div>
-    <canvas id="ambient-particles"></canvas>
-    <div class="orb"></div>
-    <div class="orb two"></div>
-  </div>
 
-  <div id="nirx-cursor" aria-hidden="true">
-    <div class="cursor-core"></div>
-    <div class="cursor-ring"></div>
-  </div>
+<canvas id="background" aria-hidden="true"></canvas>
+<div class="orb orb-one"></div>
+<div class="orb orb-two"></div>
 
-  <div id="nirx-tap-layer" aria-hidden="true"></div>
+<div id="cursor-dot" aria-hidden="true"></div>
+<div id="cursor-ring" aria-hidden="true"></div>
 
-  <div class="page">
-    <header class="topbar">
-      <a class="brand" href="#home" aria-label="Nirx home">
-        <span class="brand-mark">N.</span>
-        NIRX<span>.</span>
-      </a>
+<header class="nav-wrap">
+  <nav>
+    <a href="#home" class="brand" aria-label="Nirx home">nirx<span>.</span></a>
 
-      <nav class="nav" aria-label="Main navigation">
-        <a href="#work">work</a>
-        <a href="#about">about</a>
-      </nav>
+    <div class="nav-right">
+      <a href="#work">work</a>
+      <a href="#about">about</a>
+      <div class="clock" id="clock" aria-label="Local time">--:--:--</div>
+    </div>
 
-      <div class="status">
-        <span class="status-dot"></span>
-        JUST VIBING
+    <div class="nav-actions">
+      <button class="icon-btn" id="palette-open" aria-label="Open command palette" title="Quick actions (Ctrl+K)">⌘</button>
+      <button class="icon-btn sound-btn" id="sound-toggle" aria-label="Toggle sound" title="Toggle UI sounds">♫</button>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" id="home">
+    <div class="status reveal">
+      <span class="status-dot"></span>
+      just doing my thing
+    </div>
+
+    <h1 class="reveal">YO, I'M<br><span class="gradient-text">NIRX.</span></h1>
+
+    <p class="hero-description reveal">
+      I make <strong>Discord embeds</strong>, mess around with bots,
+      build websites, and try random ideas just to see what happens.
+      Sometimes it works. Sometimes we're debugging for an hour.
+    </p>
+
+    <div class="hero-actions reveal">
+      <a href="#work" class="btn btn-primary">look around <span>↘</span></a>
+      <button class="btn" id="copy-name">copy my name <span>⧉</span></button>
+    </div>
+
+    <div class="hero-hint reveal">oh, you made it :)</div>
+  </section>
+
+  <section id="work">
+    <div class="section-top reveal">
+      <div>
+        <div class="eyebrow">the stuff I do</div>
+        <h2>A little bit of everything.</h2>
       </div>
-    </header>
+      <p class="section-note">three things, for now.</p>
+    </div>
 
-    <main>
-      <section class="hero" id="home">
-        <div class="hero-content">
-          <div class="eyebrow">
-            <span class="status-dot"></span>
-            welcome to my corner of the internet
-          </div>
+    <div class="work-grid">
+      <button class="work-card reveal" id="embed-card">
+        <div class="card-icon">✳</div>
+        <h3>Embed Design</h3>
+        <p>Clean layouts, nice colors, and Discord panels that don't look like they were made in five minutes.</p>
+        <div class="card-bottom">
+          <span>Discord / UI</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </button>
 
-          <h1>YO, I'M<br><span class="gradient">NIRX.</span></h1>
+      <button class="work-card reveal" id="bot-card">
+        <div class="card-icon">⌘</div>
+        <h3>Bot Development</h3>
+        <p>Commands, systems, automation, and the occasional bug that makes absolutely no sense.</p>
+        <div class="card-bottom">
+          <span>JavaScript / Discord.js</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </button>
 
+      <button class="work-card reveal" id="website-card">
+        <div class="card-icon">⌁</div>
+        <h3>Website Design</h3>
+        <p>Dark interfaces, little animations, interactive details, and making boring pages feel alive.</p>
+        <div class="card-bottom">
+          <span>HTML / CSS / JS</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </button>
+    </div>
+  </section>
+
+  <section id="about" class="about">
+    <div class="about-layout">
+      <div class="reveal">
+        <div class="eyebrow">a bit about me</div>
+        <h2>Okay, so who's <span class="gradient-text">Nirx?</span></h2>
+
+        <div class="about-copy">
           <p>
-            I make <strong>embeds</strong>, mess around with <strong>bots</strong>,
-            build <strong>websites</strong>, and occasionally spend way too long
-            fixing one tiny thing. You know how it goes.
+            I'm someone who likes building stuff, testing random ideas,
+            and making things look better than they did five minutes ago.
           </p>
-
-          <div class="hero-actions">
-            <a class="button primary" href="#work">
-              Check my stuff <span aria-hidden="true">↗</span>
-            </a>
-            <a class="button" href="#about">
-              Who's Nirx? <span aria-hidden="true">↓</span>
-            </a>
-          </div>
+          <p>
+            I can spend an hour fixing one tiny detail and somehow forget
+            what I was doing in the first place. It happens.
+          </p>
+          <p>
+            I'm still learning, still experimenting, and always finding
+            something new to mess with. <strong>That's pretty much it.</strong>
+          </p>
         </div>
+      </div>
 
-        <div class="hero-side" aria-hidden="true">
-          <div class="hero-orbit"></div>
-          <div class="hero-orbit inner"></div>
-          <div class="hero-symbol">N.</div>
+      <div class="about-panel reveal">
+        <div class="panel-label">things you'll probably find me doing</div>
+
+        <div class="skill-row">
+          <span>Discord design</span>
+          <span>pretty panels</span>
         </div>
-      </section>
-
-      <section class="content-section reveal" id="work">
-        <div class="section-head">
-          <div>
-            <div class="section-label">01 / THE STUFF I DO</div>
-            <h2>Things I've been messing with.</h2>
-          </div>
-          <p>Some of the stuff I make when I'm not busy doing absolutely nothing.</p>
+        <div class="skill-row">
+          <span>Bot development</span>
+          <span>automation</span>
         </div>
-
-        <div class="project-grid">
-          <button
-            class="project-card"
-            type="button"
-            id="embed-card"
-            style="text-align:left;font:inherit;color:inherit;cursor:pointer;--card-glow:#22d3ee"
-            aria-label="Open embed design project"
-          >
-            <div class="project-icon" aria-hidden="true">▤</div>
-            <h3>Embed Design</h3>
-            <p>
-              Clean Discord panels, nice layouts, and buttons that actually
-              look like someone cared about the design.
-            </p>
-            <div class="project-action">
-              <span>Take a look</span>
-              <span aria-hidden="true">↗</span>
-            </div>
-          </button>
-
-          <button
-            class="project-card"
-            type="button"
-            id="bot-card"
-            style="text-align:left;font:inherit;color:inherit;cursor:pointer;--card-glow:#a78bfa"
-          >
-            <div class="project-icon" aria-hidden="true"
-              style="color:#c4b5fd;border-color:rgba(167,139,250,.25);background:rgba(167,139,250,.07)">⌘</div>
-            <h3>Bot Development</h3>
-            <p>
-              Discord bots, random systems, commands, and ideas that somehow
-              turn into a whole project.
-            </p>
-            <div class="project-action">
-              <span>Where are the bots?</span>
-              <span aria-hidden="true">↗</span>
-            </div>
-          </button>
-
-          <button
-            class="project-card"
-            type="button"
-            id="website-card"
-            style="text-align:left;font:inherit;color:inherit;cursor:pointer;--card-glow:#38bdf8"
-          >
-            <div class="project-icon" aria-hidden="true">⌘</div>
-            <h3>Website Design</h3>
-            <p>
-              Dark interfaces, animations, glowing details, and making a page
-              feel less like a boring school assignment.
-            </p>
-            <div class="project-action">
-              <span>You're on one</span>
-              <span aria-hidden="true">↗</span>
-            </div>
-          </button>
+        <div class="skill-row">
+          <span>Web development</span>
+          <span>UI experiments</span>
         </div>
-      </section>
-
-      <section class="content-section reveal" id="about">
-        <div class="section-head">
-          <div>
-            <div class="section-label">02 / A LITTLE ABOUT ME</div>
-            <h2>Okay, so who's Nirx?</h2>
-          </div>
+        <div class="skill-row">
+          <span>Learning new things</span>
+          <span>always</span>
         </div>
-
-        <div class="about-panel">
-          <div class="about-copy">
-            <div class="section-label">THE PERSON BEHIND THE SCREEN</div>
-            <h3>Just doing my thing.</h3>
-            <p>
-              I'm Nirx. I like building stuff, trying random ideas, and making
-              things look better than they did five minutes ago.
-            </p>
-            <p>
-              One minute I'm messing with a Discord embed, the next I'm building
-              a website or trying to make a bot do something cool.
-              <strong>Basically, if I get an idea, I'm probably going to try it.</strong>
-            </p>
-            <p>
-              Is everything perfect on the first try? Absolutely not.
-              Do I keep messing with it until it looks right? Unfortunately, yes.
-            </p>
-          </div>
-
-          <div class="about-stats">
-            <div class="mini-stat">
-              <strong>DESIGN</strong>
-              <span>Making things look clean</span>
-            </div>
-            <div class="mini-stat">
-              <strong>BUILDING</strong>
-              <span>Turning ideas into stuff</span>
-            </div>
-            <div class="mini-stat">
-              <strong>REPEATING</strong>
-              <span>Fixing that one tiny detail</span>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      <span>made by me, obviously. © <span id="year"></span> Nirx</span>
-      <span>go drink some water or something.</span>
-    </footer>
-  </div>
-
-  <!-- EMBED PROJECT CONFIRMATION -->
-  <div class="modal-backdrop" id="embed-modal" hidden>
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-      <div class="section-label">EXTERNAL LINK</div>
-      <h3 id="modal-title">Wanna check the embed?</h3>
-      <p>
-        This will open my Discord embed design in Discohook.
-        Just making sure you meant to leave the site.
-      </p>
-      <div class="modal-actions">
-        <a
-          class="button primary"
-          id="open-embed"
-          href="https://discohook.app/?share=ZkGC6eRa"
-          target="_blank"
-          rel="noopener noreferrer"
-        >Yeah, open it ↗</a>
-        <button class="button" id="close-modal" type="button">Nah, stay here</button>
       </div>
     </div>
+  </section>
+
+  <section class="closing reveal">
+    <div class="eyebrow">you reached the end</div>
+    <h2>made by <span class="gradient-text">me, obviously.</span></h2>
+    <p>go drink some water or something.</p>
+    <button class="btn" id="back-top">back to the top ↑</button>
+  </section>
+</main>
+
+<footer>
+  <span>© <span id="year"></span> Nirx. made by me, obviously.</span>
+  <span>go drink some water or something.</span>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div class="modal-backdrop" id="embed-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal">
+    <div class="eyebrow">before you go</div>
+    <h3 id="modal-title">Opening an external site.</h3>
+    <p>You're about to check out my embed design workspace on Discohook. Ready?</p>
+    <div class="modal-actions">
+      <a class="btn btn-primary" href="https://discohook.app/?share=ZkGC6eRa" target="_blank" rel="noopener noreferrer" id="embed-continue">let's go ↗</a>
+      <button class="btn" id="embed-cancel">nah, go back</button>
+    </div>
   </div>
+</div>
 
-  <script>
-    (() => {
-      "use strict";
+<div class="palette-backdrop" id="palette-backdrop">
+  <div class="palette" role="dialog" aria-modal="true" aria-label="Quick actions">
+    <input class="palette-search" id="palette-search" type="text" placeholder="What are we doing?" autocomplete="off">
+    <div class="palette-list" id="palette-list">
+      <button class="palette-item" data-action="work"><span>Explore my work</span><small>Go to section</small></button>
+      <button class="palette-item" data-action="about"><span>About Nirx</span><small>Go to section</small></button>
+      <button class="palette-item" data-action="copy"><span>Copy my name</span><small>Clipboard</small></button>
+      <button class="palette-item" data-action="sound"><span>Toggle UI sounds</span><small>Audio</small></button>
+      <button class="palette-item" data-action="top"><span>Back to the top</span><small>Navigate</small></button>
+    </div>
+    <div class="palette-hint">Press Esc to close · Ctrl + K to open</div>
+  </div>
+</div>
 
-      // ==========================================
-      // NIRX CUSTOM CURSOR + PARTICLE TRAIL
-      // ==========================================
+<script>
+(() => {
+  "use strict";
 
-      const cursor = document.getElementById("nirx-cursor");
-      const tapLayer = document.getElementById("nirx-tap-layer");
-      const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
-      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const $ = (selector, parent = document) => parent.querySelector(selector);
+  const $$ = (selector, parent = document) => [...parent.querySelectorAll(selector)];
 
-      let mouseX = -100;
-      let mouseY = -100;
-      let ringX = -100;
-      let ringY = -100;
-      let lastParticleTime = 0;
-      let lastParticleX = -100;
-      let lastParticleY = -100;
-      let frameId = 0;
+  const toast = $("#toast");
+  let toastTimeout;
 
-      function createTrailParticle(x, y) {
+  function showToast(message) {
+    toast.textContent = message;
+    toast.classList.add("show");
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => toast.classList.remove("show"), 2400);
+  }
+
+  // Feature 1: command palette
+  const paletteBackdrop = $("#palette-backdrop");
+  const paletteSearch = $("#palette-search");
+  const paletteItems = $$(".palette-item");
+
+  function openPalette() {
+    paletteBackdrop.classList.add("open");
+    paletteSearch.value = "";
+    filterPalette("");
+    setTimeout(() => paletteSearch.focus(), 30);
+  }
+
+  function closePalette() {
+    paletteBackdrop.classList.remove("open");
+  }
+
+  function filterPalette(query) {
+    const q = query.toLowerCase().trim();
+    paletteItems.forEach(item => {
+      item.style.display = item.textContent.toLowerCase().includes(q) ? "flex" : "none";
+    });
+  }
+
+  $("#palette-open").addEventListener("click", openPalette);
+  paletteSearch.addEventListener("input", () => filterPalette(paletteSearch.value));
+
+  paletteBackdrop.addEventListener("click", event => {
+    if (event.target === paletteBackdrop) closePalette();
+  });
+
+  paletteItems.forEach(item => {
+    item.addEventListener("click", () => {
+      const action = item.dataset.action;
+      closePalette();
+
+      if (action === "work") $("#work").scrollIntoView({ behavior: "smooth" });
+      if (action === "about") $("#about").scrollIntoView({ behavior: "smooth" });
+      if (action === "copy") copyName();
+      if (action === "sound") toggleSound();
+      if (action === "top") window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  });
+
+  document.addEventListener("keydown", event => {
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+      event.preventDefault();
+      paletteBackdrop.classList.contains("open") ? closePalette() : openPalette();
+    }
+
+    if (event.key === "Escape") {
+      closePalette();
+      closeModal();
+    }
+  });
+
+  // Feature 2: live local clock
+  const clock = $("#clock");
+
+  function updateClock() {
+    clock.textContent = new Intl.DateTimeFormat(undefined, {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false
+    }).format(new Date());
+  }
+
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // Feature 3: optional UI sounds, off by default
+  let soundEnabled = false;
+  let audioContext = null;
+  const soundButton = $("#sound-toggle");
+
+  function playSound(frequency = 650) {
+    if (!soundEnabled) return;
+
+    try {
+      audioContext ??= new (window.AudioContext || window.webkitAudioContext)();
+
+      if (audioContext.state === "suspended") audioContext.resume();
+
+      const oscillator = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+
+      oscillator.type = "sine";
+      oscillator.frequency.value = frequency;
+      gain.gain.setValueAtTime(.035, audioContext.currentTime);
+      gain.gain.exponentialRampToValueAtTime(.001, audioContext.currentTime + .09);
+
+      oscillator.connect(gain);
+      gain.connect(audioContext.destination);
+      oscillator.start();
+      oscillator.stop(audioContext.currentTime + .09);
+    } catch (_) {
+      // Audio is optional; the site works without it.
+    }
+  }
+
+  function toggleSound() {
+    soundEnabled = !soundEnabled;
+    soundButton.classList.toggle("active", soundEnabled);
+    soundButton.setAttribute("aria-pressed", String(soundEnabled));
+    showToast(soundEnabled ? "UI sounds enabled ♫" : "UI sounds off.");
+    if (soundEnabled) playSound(780);
+  }
+
+  soundButton.addEventListener("click", toggleSound);
+
+  document.addEventListener("click", event => {
+    if (event.target.closest("button, a")) playSound(540);
+  });
+
+  // Feature 4: hidden keyboard interaction — type NIRX
+  let secretInput = "";
+  let secretTimer;
+
+  document.addEventListener("keydown", event => {
+    if (event.ctrlKey || event.metaKey || event.altKey) return;
+    if (event.target.matches("input, textarea, select, [contenteditable='true']")) return;
+    if (event.key.length !== 1) return;
+
+    secretInput = (secretInput + event.key.toLowerCase()).slice(-4);
+    clearTimeout(secretTimer);
+    secretTimer = setTimeout(() => secretInput = "", 1800);
+
+    if (secretInput === "nirx") {
+      secretInput = "";
+      document.body.classList.remove("secret-mode");
+      void document.body.offsetWidth;
+      document.body.classList.add("secret-mode");
+      showToast("you found the secret. nice.");
+      playSound(880);
+      setTimeout(() => document.body.classList.remove("secret-mode"), 700);
+
+      for (let i = 0; i < 24; i++) {
         const particle = document.createElement("span");
-        const size = 2 + Math.random() * 3;
-        const colors = ["#22d3ee", "#67e8f9", "#a78bfa"];
-
-        particle.className = "nirx-trail-particle";
-        particle.style.left = x + "px";
-        particle.style.top = y + "px";
-        particle.style.setProperty("--size", size + "px");
-        particle.style.setProperty(
-          "--particle-color",
-          colors[Math.floor(Math.random() * colors.length)]
-        );
-        particle.style.setProperty("--drift-x", ((Math.random() - .5) * 28) + "px");
-        particle.style.setProperty("--drift-y", ((Math.random() - .5) * 28) + "px");
-
+        particle.className = "trail-particle";
+        particle.style.left = (Math.random() * window.innerWidth) + "px";
+        particle.style.top = (Math.random() * window.innerHeight) + "px";
+        particle.style.animationDuration = (.5 + Math.random() * .7) + "s";
         document.body.appendChild(particle);
-        particle.addEventListener("animationend", () => particle.remove(), { once: true });
+        setTimeout(() => particle.remove(), 1300);
+      }
+    }
+  });
+
+  // Feature 5: copy name to clipboard
+  async function copyName() {
+    try {
+      await navigator.clipboard.writeText("Nirx");
+      showToast("Nirx copied. there you go.");
+    } catch (_) {
+      const input = document.createElement("textarea");
+      input.value = "Nirx";
+      input.style.position = "fixed";
+      input.style.opacity = "0";
+      document.body.appendChild(input);
+      input.select();
+
+      try {
+        const copied = document.execCommand("copy");
+        showToast(copied ? "Nirx copied. there you go." : "Copy failed. Try selecting Nirx manually.");
+      } catch (_) {
+        showToast("Copy failed. Try selecting Nirx manually.");
       }
 
-      function animateCursor() {
-        if (!finePointer.matches) {
-          frameId = 0;
-          return;
-        }
+      input.remove();
+    }
+  }
 
-        ringX += (mouseX - ringX) * .24;
-        ringY += (mouseY - ringY) * .24;
+  $("#copy-name").addEventListener("click", copyName);
 
-        cursor.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
-        frameId = requestAnimationFrame(animateCursor);
-      }
+  // Embed modal
+  const embedModal = $("#embed-modal");
+  const embedContinue = $("#embed-continue");
 
-      function startCursorAnimation() {
-        if (!finePointer.matches || frameId) return;
-        frameId = requestAnimationFrame(animateCursor);
-      }
+  function openModal() {
+    embedModal.classList.add("open");
+    $("#embed-cancel").focus();
+  }
 
-      function onMouseMove(event) {
-        mouseX = event.clientX;
-        mouseY = event.clientY;
+  function closeModal() {
+    embedModal.classList.remove("open");
+  }
 
-        if (!cursor.classList.contains("visible")) {
-          ringX = mouseX;
-          ringY = mouseY;
-          cursor.classList.add("visible");
-          startCursorAnimation();
-        }
+  $("#embed-card").addEventListener("click", openModal);
+  $("#embed-cancel").addEventListener("click", closeModal);
 
-        const now = performance.now();
-        const dx = mouseX - lastParticleX;
-        const dy = mouseY - lastParticleY;
-        const distance = Math.hypot(dx, dy);
+  embedModal.addEventListener("click", event => {
+    if (event.target === embedModal) closeModal();
+  });
 
-        // Limit particle creation to keep the effect smooth.
-        if (
-          !reducedMotion.matches &&
-          distance > 9 &&
-          now - lastParticleTime > 20
-        ) {
-          createTrailParticle(mouseX, mouseY);
-          lastParticleX = mouseX;
-          lastParticleY = mouseY;
-          lastParticleTime = now;
-        }
-      }
+  embedContinue.addEventListener("click", closeModal);
 
-      document.addEventListener("mousemove", onMouseMove, { passive: true });
+  $("#bot-card").addEventListener("click", () => {
+    showToast("bro i lost them 💀 don't ask me where they went");
+  });
 
-      document.addEventListener("mouseover", (event) => {
-        if (event.target.closest("a, button, [role='button']")) {
-          cursor.classList.add("hovering");
-        } else {
-          cursor.classList.remove("hovering");
+  $("#website-card").addEventListener("click", () => {
+    showToast("you're already here ;)");
+  });
+
+  $("#back-top").addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  $("#year").textContent = new Date().getFullYear();
+
+  // Scroll reveal
+  const revealElements = $$(".reveal");
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
         }
       });
+    }, { threshold: .12 });
 
-      document.addEventListener("mouseleave", () => {
-        cursor.classList.remove("visible");
-      });
+    revealElements.forEach(element => observer.observe(element));
+  } else {
+    revealElements.forEach(element => element.classList.add("visible"));
+  }
 
-      document.addEventListener("mouseenter", () => {
-        if (finePointer.matches) cursor.classList.add("visible");
-      });
+  // Neon cursor and particle trail on precise-pointer devices
+  const dot = $("#cursor-dot");
+  const ring = $("#cursor-ring");
+  const finePointer = window.matchMedia("(pointer: fine)").matches;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-      function syncPointerMode() {
-        if (finePointer.matches) {
-          cursor.style.display = "block";
-          startCursorAnimation();
-        } else {
-          cursor.classList.remove("visible", "hovering");
-          cursor.style.display = "none";
-          if (frameId) {
-            cancelAnimationFrame(frameId);
-            frameId = 0;
-          }
-        }
+  let mouseX = -100;
+  let mouseY = -100;
+  let ringX = -100;
+  let ringY = -100;
+  let lastTrail = 0;
+
+  if (finePointer && !reduceMotion) {
+    dot.style.opacity = "1";
+    ring.style.opacity = "1";
+
+    window.addEventListener("mousemove", event => {
+      mouseX = event.clientX;
+      mouseY = event.clientY;
+      dot.style.left = mouseX + "px";
+      dot.style.top = mouseY + "px";
+
+      const now = performance.now();
+      if (now - lastTrail > 24) {
+        lastTrail = now;
+        const particle = document.createElement("span");
+        particle.className = "trail-particle";
+        particle.style.left = mouseX + "px";
+        particle.style.top = mouseY + "px";
+        document.body.appendChild(particle);
+        setTimeout(() => particle.remove(), 700);
       }
+    });
 
-      finePointer.addEventListener?.("change", syncPointerMode);
-      syncPointerMode();
+    function animateCursor() {
+      ringX += (mouseX - ringX) * .17;
+      ringY += (mouseY - ringY) * .17;
+      ring.style.left = ringX + "px";
+      ring.style.top = ringY + "px";
+      requestAnimationFrame(animateCursor);
+    }
 
-      // ==========================================
-      // MOBILE / TOUCH TAP RIPPLE
-      // ==========================================
+    animateCursor();
 
-      function createTapRipple(x, y) {
-        if (reducedMotion.matches) return;
+    $$("a, button, .work-card, input").forEach(element => {
+      element.addEventListener("mouseenter", () => ring.classList.add("hovering"));
+      element.addEventListener("mouseleave", () => ring.classList.remove("hovering"));
+    });
 
-        const ripple = document.createElement("span");
-        ripple.className = "nirx-tap-ripple";
-        ripple.style.left = x + "px";
-        ripple.style.top = y + "px";
+    document.addEventListener("mouseleave", () => {
+      dot.style.opacity = "0";
+      ring.style.opacity = "0";
+    });
 
-        tapLayer.appendChild(ripple);
-        ripple.addEventListener("animationend", () => ripple.remove(), { once: true });
-      }
+    document.addEventListener("mouseenter", () => {
+      dot.style.opacity = "1";
+      ring.style.opacity = "1";
+    });
+  }
 
-      document.addEventListener("pointerdown", (event) => {
-        if (event.pointerType === "touch") {
-          createTapRipple(event.clientX, event.clientY);
-        }
-      }, { passive: true });
+  // Touch alternative: subtle tap ripple, without blocking touch controls
+  if (window.matchMedia("(pointer: coarse)").matches && !reduceMotion) {
+    document.addEventListener("pointerdown", event => {
+      if (event.pointerType !== "touch") return;
 
-      // ==========================================
-      // AMBIENT BACKGROUND PARTICLES
-      // ==========================================
+      const ripple = document.createElement("span");
+      ripple.className = "tap-ripple";
+      ripple.style.left = event.clientX + "px";
+      ripple.style.top = event.clientY + "px";
+      document.body.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 700);
+    }, { passive: true });
+  }
 
-      const canvas = document.getElementById("ambient-particles");
-      const ctx = canvas.getContext("2d");
-      let particles = [];
-      let canvasWidth = 0;
-      let canvasHeight = 0;
-      let dpr = 1;
-      let canvasFrame = 0;
+  // Animated background particles
+  const canvas = $("#background");
+  const ctx = canvas.getContext("2d");
+  let width = 0;
+  let height = 0;
+  let particles = [];
+  let frameId = null;
 
-      function resizeCanvas() {
-        dpr = Math.min(window.devicePixelRatio || 1, 2);
-        canvasWidth = window.innerWidth;
-        canvasHeight = window.innerHeight;
+  function resizeCanvas() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = width + "px";
+    canvas.style.height = height + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-        canvas.width = Math.round(canvasWidth * dpr);
-        canvas.height = Math.round(canvasHeight * dpr);
-        canvas.style.width = canvasWidth + "px";
-        canvas.style.height = canvasHeight + "px";
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const count = Math.min(75, Math.floor(width / 17));
+    particles = Array.from({ length: count }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      vx: (Math.random() - .5) * .35,
+      vy: (Math.random() - .5) * .35,
+      r: Math.random() * 1.6 + .5
+    }));
+  }
 
-        const count = Math.min(65, Math.max(22, Math.floor(canvasWidth / 19)));
+  function drawBackground() {
+    ctx.clearRect(0, 0, width, height);
 
-        particles = Array.from({ length: count }, () => ({
-          x: Math.random() * canvasWidth,
-          y: Math.random() * canvasHeight,
-          r: Math.random() * 1.5 + .3,
-          vx: (Math.random() - .5) * .25,
-          vy: (Math.random() - .5) * .22,
-          alpha: Math.random() * .45 + .1
-        }));
-      }
+    for (const p of particles) {
+      p.x += p.vx;
+      p.y += p.vy;
 
-      function drawBackground() {
-        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+      if (p.x < 0 || p.x > width) p.vx *= -1;
+      if (p.y < 0 || p.y > height) p.vy *= -1;
 
-        particles.forEach((p, i) => {
-          p.x += p.vx;
-          p.y += p.vy;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(103,247,255,.5)";
+      ctx.fill();
+    }
 
-          if (p.x < 0) p.x = canvasWidth;
-          if (p.x > canvasWidth) p.x = 0;
-          if (p.y < 0) p.y = canvasHeight;
-          if (p.y > canvasHeight) p.y = 0;
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const a = particles[i];
+        const b = particles[j];
+        const dx = a.x - b.x;
+        const dy = a.y - b.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
 
+        if (distance < 105) {
           ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(100, 218, 245, ${p.alpha})`;
-          ctx.fill();
-
-          for (let j = i + 1; j < particles.length; j++) {
-            const q = particles[j];
-            const distance = Math.hypot(p.x - q.x, p.y - q.y);
-
-            if (distance < 100) {
-              ctx.beginPath();
-              ctx.moveTo(p.x, p.y);
-              ctx.lineTo(q.x, q.y);
-              ctx.strokeStyle = `rgba(65, 150, 190, ${.075 * (1 - distance / 100)})`;
-              ctx.lineWidth = .6;
-              ctx.stroke();
-            }
-          }
-        });
-
-        if (!reducedMotion.matches) {
-          canvasFrame = requestAnimationFrame(drawBackground);
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.strokeStyle = `rgba(103,247,255,${(1 - distance / 105) * .12})`;
+          ctx.lineWidth = .7;
+          ctx.stroke();
         }
       }
+    }
 
-      resizeCanvas();
+    if (!reduceMotion) {
+      frameId = requestAnimationFrame(drawBackground);
+    }
+  }
 
-      if (reducedMotion.matches) {
-        drawBackground();
-      } else {
-        drawBackground();
-      }
+  resizeCanvas();
+  drawBackground();
 
-      window.addEventListener("resize", resizeCanvas, { passive: true });
+  window.addEventListener("resize", () => {
+    resizeCanvas();
+    if (reduceMotion) {
+      cancelAnimationFrame(frameId);
+      drawBackground();
+    }
+  });
 
-      // ==========================================
-      // SCROLL REVEAL
-      // ==========================================
-
-      const revealItems = document.querySelectorAll(".reveal");
-
-      if ("IntersectionObserver" in window && !reducedMotion.matches) {
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add("shown");
-              observer.unobserve(entry.target);
-            }
-          });
-        }, { threshold: .12 });
-
-        revealItems.forEach((element) => observer.observe(element));
-      } else {
-        revealItems.forEach((element) => element.classList.add("shown"));
-      }
-
-      // ==========================================
-      // TOASTS
-      // ==========================================
-
-      let toastTimer;
-
-      function showToast(message) {
-        const oldToast = document.querySelector(".toast");
-        if (oldToast) oldToast.remove();
-
-        clearTimeout(toastTimer);
-
-        const toast = document.createElement("div");
-        toast.className = "toast";
-        toast.setAttribute("role", "status");
-        toast.textContent = message;
-        document.body.appendChild(toast);
-
-        toastTimer = setTimeout(() => toast.remove(), 2600);
-      }
-
-      document.getElementById("bot-card").addEventListener("click", () => {
-        showToast("bro i lost them 💀 don't ask me where they went");
-      });
-
-      document.getElementById("website-card").addEventListener("click", () => {
-        showToast("you're already here ;)");
-      });
-
-      // ==========================================
-      // EMBED MODAL
-      // ==========================================
-
-      const modal = document.getElementById("embed-modal");
-      const embedCard = document.getElementById("embed-card");
-      const closeModalButton = document.getElementById("close-modal");
-      const openEmbed = document.getElementById("open-embed");
-      let lastFocusedElement = null;
-
-      function openModal() {
-        lastFocusedElement = document.activeElement;
-        modal.hidden = false;
-        closeModalButton.focus();
-      }
-
-      function closeModal() {
-        modal.hidden = true;
-        if (lastFocusedElement) lastFocusedElement.focus();
-      }
-
-      embedCard.addEventListener("click", openModal);
-      closeModalButton.addEventListener("click", closeModal);
-
-      modal.addEventListener("click", (event) => {
-        if (event.target === modal) closeModal();
-      });
-
-      document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && !modal.hidden) {
-          closeModal();
-        }
-      });
-
-      openEmbed.addEventListener("click", closeModal);
-
-      // ==========================================
-      // FOOTER YEAR
-      // ==========================================
-
-      document.getElementById("year").textContent = new Date().getFullYear();
-    })();
-  </script>
+  // Pause background animation while the tab is hidden
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      cancelAnimationFrame(frameId);
+    } else if (!reduceMotion) {
+      cancelAnimationFrame(frameId);
+      drawBackground();
+    }
+  });
+})();
+</script>
 </body>
 </html>
